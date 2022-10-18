@@ -6,14 +6,23 @@ const { CODE_200 } = require('../utils/code');
 
 module.exports.getUserMovies = (req, res, next) => {
   const ownerId = req.user._id;
-  console.log(ownerId);
 
-  Movie.findOne({ owner: ownerId })
+  Movie.find({ owner: { _id: ownerId } })
     .then((movie) => {
-      console.log({ owner: movie.owner.toString() });
-      res.send({ owner: movie.owner.toString() });
+      if (movie === null) {
+        throw new NotFoundError('Видео не найдено');
+      }
+
+      return movie;
     })
-    .catch(next);
+    .then((movie) => res.status(CODE_200).send(movie))
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Видео не найдено'));
+        return;
+      }
+      next(err);
+    });
 };
 
 module.exports.createMovie = (req, res, next) => {
