@@ -17,6 +17,6 @@ router.post('/signup', celebrate({
   }),
 }), registration);
 
-router.get('/signout', signOut);
+router.post('/signout', signOut);
 
 module.exports = router;
