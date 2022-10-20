@@ -28,9 +28,7 @@ mongoose.connect('mongodb://localhost:27017/moviedb', {
 
 app.use(requestLogger);
 
-app.listen(PORT, () => {
-  console.log(`Сервер запущен http://localhost:${PORT}`);
-});
+app.listen(PORT);
 
 app.use(cors);
 

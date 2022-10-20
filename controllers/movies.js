@@ -68,7 +68,6 @@ module.exports.createMovie = (req, res, next) => {
 module.exports.deleteMovie = (req, res, next) => {
   const { objectId } = req.params;
   const ownerId = req.user._id;
-  console.log(req.params.objectId);
 
   Movie.findById(objectId)
     .then((movie) => {
