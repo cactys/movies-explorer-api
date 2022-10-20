@@ -14,7 +14,7 @@ const auth = require('./middlewares/auth');
 const cors = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { PORT } = process.env;
+const { PORT, DB_HOST, DB_PORT } = process.env;
 
 const app = express();
 
@@ -22,7 +22,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/moviedb', {
+mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/moviedb`, {
   useNewUrlParser: true,
 });
 
