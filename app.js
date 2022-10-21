@@ -18,7 +18,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/moviedb`, {
+mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/moviesdb`, {
   useNewUrlParser: true,
 });
 
