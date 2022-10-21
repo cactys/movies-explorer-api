@@ -26,7 +26,7 @@ app.use(requestLogger);
 
 app.listen(PORT);
 
-app.use('/', routes);
+app.use('/api', routes);
 
 app.use((req, res, next) => {
   next(new NotFoundError('Страница не найдена'));
