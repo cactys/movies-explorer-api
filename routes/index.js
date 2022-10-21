@@ -5,14 +5,14 @@ const users = require('./users');
 const movies = require('./movies');
 const auth = require('../middlewares/auth');
 
-router.post('/signin', celebrate({
+router.post('/api/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().email().required(),
     password: Joi.string().required(),
   }),
 }), login);
 
-router.post('/signup', celebrate({
+router.post('/api/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().email().required(),
     password: Joi.string().required(),
@@ -20,11 +20,11 @@ router.post('/signup', celebrate({
   }),
 }), registration);
 
-router.post('/signout', signOut);
+router.post('/api/signout', signOut);
 
 router.use(auth);
 
-router.use('/users', users);
-router.use('/movies', movies);
+router.use('/api/users', users);
+router.use('/api/movies', movies);
 
 module.exports = router;
