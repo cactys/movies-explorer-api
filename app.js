@@ -6,11 +6,11 @@ const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const routes = require('./routes');
-const NotFoundError = require('./errors/not-found-err');
-const { ERROR_500 } = require('./utils/code');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { hostDB, port } = require('./utils/config');
+const { error } = require('./errors/internal-server-error');
 
-const { PORT, DB_HOST, DB_PORT } = process.env;
+const { PORT, DB_HOST, NODE_ENV } = process.env;
 
 const app = express();
 
@@ -18,33 +18,17 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/moviesdb`, {
+mongoose.connect(NODE_ENV === 'prodaction' ? DB_HOST : hostDB, {
   useNewUrlParser: true,
 });
 
 app.use(requestLogger);
 
-app.listen(PORT);
+app.listen(NODE_ENV === 'prodaction' ? PORT : port);
 
 app.use('/', routes);
-
-app.use((req, res, next) => {
-  next(new NotFoundError('Страница не найдена'));
-});
 
 app.use(errorLogger);
 app.use(errors());
 
-app.use((err, req, res, next) => {
-  const { statusCode = ERROR_500, message } = err;
-
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === ERROR_500
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
-
-  next();
-});
+app.use(error);

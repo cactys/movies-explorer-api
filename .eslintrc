@@ -1,5 +1,9 @@
 {
   "rules": {
+    "func-names": [
+      "error",
+      "never"
+    ],
     "no-underscore-dangle": [
       "error",
       {

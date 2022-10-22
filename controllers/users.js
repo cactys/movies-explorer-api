@@ -31,18 +31,18 @@ module.exports.updateUser = (req, res, next) => {
   )
     .then((user) => {
       if (user === null) {
-        throw new NotFoundError('Пользователь не найден');
+        throw new NotFoundError();
       }
 
       return res.status(CODE_200).send(user.toObject());
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные'));
+        next(new BadRequestError());
         return;
       }
       if (err.name === 'CastError') {
-        next(new NotFoundError('Пользователь не найден'));
+        next(new NotFoundError());
         return;
       }
       next(err);
@@ -68,7 +68,7 @@ module.exports.registration = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные'));
+        next(new BadRequestError());
         return;
       }
       if (err.code === 11000) {
@@ -104,11 +104,6 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.signOut = (req, res) => {
-  res.cookie('jwt', '*', {
-    maxAge: 10,
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-  })
+  res.clearCookie('jwt')
     .send({ message: 'sign out' });
 };

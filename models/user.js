@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema(
   {
     email: {
       type: String,
-      required: true,
+      required: [true, '{VALUE} обязательное поле для ввода'],
       unique: true,
       validate: {
         validator: (v) => validator.isEmail(v),
@@ -16,12 +16,12 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: [true, '{VALUE} обязательное поле для ввода'],
       select: false,
     },
     name: {
       type: String,
-      required: true,
+      required: [true, '{VALUE} обязательное поле для ввода'],
       minlength: [2, 'Должно быть, не меньше 2 символа, получено {VALUE}'],
       maxlength: [30, 'Должно быть, не больше 30 символов, получено {VALUE} '],
     },
@@ -34,18 +34,17 @@ const userSchema = new mongoose.Schema(
   null,
 );
 
-// eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new UnauthorizedError('Не верно указаны почта или пароль'));
+        return Promise.reject(new UnauthorizedError('Неверно указаны почта или пароль'));
       }
 
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new UnauthorizedError('Не верно указаны почта или пароль'));
+            return Promise.reject(new UnauthorizedError('Неверно указаны почта или пароль'));
           }
 
           return user;

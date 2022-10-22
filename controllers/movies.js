@@ -5,20 +5,13 @@ const Movie = require('../models/movie');
 const { CODE_200 } = require('../utils/code');
 
 module.exports.getUserMovies = (req, res, next) => {
-  const ownerId = req.user._id;
-
-  Movie.find({ owner: { _id: ownerId } })
-    .then((movie) => {
-      if (movie === null) {
-        throw new NotFoundError('Видео не найдено');
-      }
-
-      return movie;
+  Movie.find({ ...req.body, owner: req.user._id })
+    .then((movies) => {
+      res.send(movies);
     })
-    .then((movie) => res.status(CODE_200).send(movie))
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Видео не найдено'));
+        next(new BadRequestError());
         return;
       }
       next(err);
@@ -58,7 +51,7 @@ module.exports.createMovie = (req, res, next) => {
     .then((movie) => res.send(movie))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные'));
+        next(new BadRequestError());
         return;
       }
       next(err);
@@ -72,7 +65,7 @@ module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(objectId)
     .then((movie) => {
       if (movie === null) {
-        throw new NotFoundError('Фильм не найден');
+        throw new NotFoundError();
       }
 
       if (movie.owner.toString() !== ownerId) {
@@ -81,11 +74,15 @@ module.exports.deleteMovie = (req, res, next) => {
 
       return movie;
     })
-    .then((movie) => Movie.deleteOne(movie))
-    .then((movie) => res.status(CODE_200).send(movie))
+    .then((movie) => {
+      Movie.deleteOne(movie)
+        .then(() => {
+          res.status(CODE_200).send({ message: 'delete' });
+        });
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Фильм не найден'));
+        next(new BadRequestError());
         return;
       }
 
