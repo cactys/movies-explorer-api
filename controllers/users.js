@@ -42,7 +42,7 @@ module.exports.updateUser = (req, res, next) => {
         return;
       }
       if (err.name === 'CastError') {
-        next(new NotFoundError());
+        next(new BadRequestError());
         return;
       }
       next(err);
