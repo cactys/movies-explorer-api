@@ -9,6 +9,7 @@ const routes = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { hostDB, port } = require('./utils/config');
 const { error } = require('./errors/internal-server-error');
+const cors = require('./middlewares/cors');
 
 const { PORT, DB_HOST, NODE_ENV } = process.env;
 
@@ -25,6 +26,8 @@ mongoose.connect(NODE_ENV === 'prodaction' ? DB_HOST : hostDB, {
 app.use(requestLogger);
 
 app.listen(NODE_ENV === 'prodaction' ? PORT : port);
+
+app.use(cors);
 
 app.use('/', routes);
 
