@@ -6,7 +6,7 @@ const BadRequestError = require('../errors/bad-request-error');
 const ConflictError = require('../errors/conflict-error');
 const NotFoundError = require('../errors/not-found-err');
 const User = require('../models/user');
-const { CODE_200, CODE_201 } = require('../utils/code');
+const { CODE_200 } = require('../utils/code');
 
 module.exports.getCurrentUser = (req, res, next) => {
   const { _id } = req.user;
@@ -64,7 +64,19 @@ module.exports.registration = (req, res, next) => {
       password: hash,
     }))
     .then((user) => {
-      res.status(CODE_201).send(user.toObject());
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', {
+        expiresIn: '7d',
+      });
+
+      return res
+        .cookie('jwt', token, {
+          maxAge: 3600000 * 24 * 7,
+          httpOnly: true,
+        })
+        .send({
+          token,
+          message: 'Успешная авторизация',
+        });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -92,8 +104,6 @@ module.exports.login = (req, res, next) => {
         .cookie('jwt', token, {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
-          // secure: true,
-          // sameSite: 'none',
         })
         .send({
           token,
