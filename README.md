@@ -1,4 +1,5 @@
 # movies-explorer-api
+**Дипломная работа Яндекс.Практикум, курс 'Веб-разработчик'.**
 ## BACKEND
 https://api.khnychkov.nomoredomains.icu/api/
 
