@@ -1,7 +1,7 @@
 # movies-explorer-api
 **Дипломная работа Яндекс.Практикум, курс 'Веб-разработчик'.**
 ## BACKEND
-https://api.khnychkov.nomoredomains.icu/api/
+https://api.khnychkov.nomoredomains.icu/api/ ***сервер не доступен, в процессе поиска куда задеплоить***
 
 ### 🔨 Стэк:
 + ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
