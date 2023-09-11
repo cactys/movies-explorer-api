@@ -1,6 +1,6 @@
 const allowedCors = [
-  'https://khnychkov.nomoredomains.icu',
-  'http://khnychkov.nomoredomains.icu',
+  'https://movies.khortys.space',
+  'http://movies.khortys.space',
   'http://localhost:3000',
 ];
 
